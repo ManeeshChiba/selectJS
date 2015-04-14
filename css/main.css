@@ -2,31 +2,40 @@
 /*Layout*/
 .faux-select {
   list-style-type: none;
-  padding: 0.4em 0;
-  background: #46465A;
-  color: #fff;
-  text-align: left;
-  border: 3px solid #000;
   cursor: pointer;
-  width: 150px;
   display: inline-block;
   position: relative;
 }
 .faux-select li {
-  padding: 0;
-  text-indent: 1em;
   position: relative;
 }
 .faux-select li .options {
   display: block;
   list-style-type: none;
-  padding: 0;
-  margin: 0.4em 0 0 0;
-  background: transparent;
   position: absolute;
   width: 100%;
   max-height: 0px;
   overflow: hidden;
+}
+.faux-select li .options.open {
+  max-height: 1000%;
+}
+.faux-select {
+  padding: 0.4em 0;
+  background: #46465A;
+  color: #fff;
+  text-align: left;
+  border: 3px solid #000;
+  width: 150px;
+}
+.faux-select li {
+  padding: 0;
+  text-indent: 1em;
+}
+.faux-select li .options {
+  padding: 0;
+  margin: 0.4em 0 0 0;
+  background: transparent;
   border: 3px solid transparent;
   top: 1.2em;
   left: -0.2em;
@@ -45,7 +54,6 @@
 }
 .faux-select li .options.open {
   background: #2F2F3F;
-  max-height: 1000%;
   border: 3px solid #000;
   border-top: 3px solid transparent;
 }
