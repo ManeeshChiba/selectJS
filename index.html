@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	    <meta charset="UTF-8">
+	    <title>Select.JS</title>
+	    <link rel="stylesheet" href="css/main.css">
+	</head>
+
+	<body>
+	    <select name="names" id="names">
+	        <option value="ted">Ted</option>
+	        <option value="barney">Barney</option>
+	        <option value="marshal">Marshal</option>
+	        <option value="lily">Lily</option>
+	        <option value="robin">Robin</option>
+	    </select>
+	    <br />
+	    <ul class="faux-select" data-selected-value="ted">
+	        <li class="selected-option"><span>Ted</span>
+	            <ul class="options">
+	                <li data-value="ted">Ted</li>
+	                <li data-value="barney">Barney</li>
+	                <li data-value="marshal">Marshal</li>
+	                <li data-value="lily">Lily</li>
+	                <li data-value="robin">Robin</li>
+	            </ul>
+	        </li>
+	    </ul>
+		
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
+	    <script src="js/main.js"></script>
+	</body>
+</html>
