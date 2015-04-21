@@ -9,6 +9,7 @@ $(function() {
         $('select').each(function() {
             var selectName = $(this).attr('name');
             var selectId = $(this).attr('id');
+            if ( $(this).attr('multiple') == 'multiple' ) { var multiple = true; } else { var multiple = false; };
             var arrOptionValue = new Array();
             var arrOptionText = new Array();
             var optionsFauxList = '';
@@ -19,7 +20,7 @@ $(function() {
             for (var i = 1; i < arrOptionValue.length; i++) {
                 optionsFauxList += '<li data-value="' + arrOptionValue[i] + '">' + arrOptionText[i] + '</li>';
             };
-            var openFauxList = '<ul class="faux-select" id="' + selectId + '" name="' + selectName + '" data-selected-value="' + arrOptionValue[1] + '"><li class="selected-option"><span>' + arrOptionText[1] + '</span><ul class="options">';
+            var openFauxList = '<ul class="faux-select multiple-'+multiple+'" id="' + selectId + '" name="' + selectName + '" data-selected-value="' + arrOptionValue[1] + '"><li class="selected-option"><span>' + arrOptionText[1] + '</span><ul class="options">';
             var closeFauxList = '</ul></li></ul>';
             $(openFauxList + optionsFauxList + closeFauxList).insertAfter($(this));
             $(this).addClass('hidden');
@@ -28,12 +29,18 @@ $(function() {
         enableFauxSelectbox();
     }
 
+    var multiValue = '';
 
 	//Makes new select boxes usable
 	function enableFauxSelectbox(){
-		$('.faux-select').click(function(){
+		$('.faux-select.multiple-false').click(function(){
 		  $(this).toggleClass('open');
 		  $('.options',this).toggleClass('open');
+		});
+
+		$('.faux-select.multiple-true').click(function(){
+		  $(this).addClass('open');
+		  $('.options',this).addClass('open');
 		});
 
 		$('.options li').click(function(){
@@ -43,7 +50,23 @@ $(function() {
 			$('.selected-option span',parentSelector).text(selection);
 			$(this).toggleClass('checked');
 			parentSelector.attr('data-selected-value',dataValue);
-			mirrorSelect( parentSelector.attr('id'), selection, dataValue);
+			
+
+			if (parentSelector.hasClass('multiple-true')){
+				
+				
+
+				if (multiValue.indexOf(dataValue) >= 0){
+					multiValue = multiValue.replace(dataValue+',','');
+				} else {
+					multiValue += dataValue+',';
+				}
+
+				console.log(multiValue);
+				mirrorSelect( parentSelector.attr('id'), selection, dataValue);
+			} else {
+				mirrorSelect( parentSelector.attr('id'), selection, dataValue);
+			}
 		});
 	}
 
