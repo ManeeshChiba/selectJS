@@ -16,6 +16,7 @@
   width: 100%;
   max-height: 0px;
   overflow: hidden;
+  z-index: 9999;
 }
 .faux-select li .options.open {
   max-height: 1000%;
@@ -51,6 +52,9 @@
 }
 .faux-select li .options li:last-of-type {
   border-bottom: 0;
+}
+.faux-select li .options .checked {
+  background: rgba(255, 255, 255, 0.2);
 }
 .faux-select li .options.open {
   background: #2F2F3F;
