@@ -59,11 +59,18 @@ $(function() {
 				if (multiValue.indexOf(dataValue) >= 0){
 					multiValue = multiValue.replace(dataValue+',','');
 				} else {
-					multiValue += dataValue+',';
+					if (multiValue == ''){
+						multiValue += dataValue;
+					} else {
+						multiValue += ','+dataValue;
+					}
+					
 				}
 
-				console.log(multiValue);
-				mirrorSelect( parentSelector.attr('id'), selection, dataValue);
+				var arraySelection = multiValue.split(',');
+				console.log(arraySelection);
+				mirrorSelect( parentSelector.attr('id'), selection, arraySelection);
+
 			} else {
 				mirrorSelect( parentSelector.attr('id'), selection, dataValue);
 			}
@@ -73,6 +80,7 @@ $(function() {
 	//Mirror Select Box Values
 	function mirrorSelect(selectionID, selectionText, SelectionValue) {
 	  $('select#'+selectionID).val(SelectionValue).trigger('change');
+	  console.log( $('select#'+selectionID).val() );
 	}
 
 
