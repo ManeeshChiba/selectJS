@@ -18,6 +18,10 @@
   overflow: hidden;
   z-index: 9999;
 }
+.faux-select li .options .group-label {
+  pointer-events: none;
+  cursor: default;
+}
 .faux-select {
   padding: 0.4em 0;
   background: #46465A;
@@ -37,6 +41,9 @@
   border: 3px solid transparent;
   top: 1.2em;
   left: -0.2em;
+  background: #2F2F3F;
+  border: 3px solid #000;
+  border-top: 3px solid transparent;
 }
 .faux-select li .options li {
   padding: 0.4em 0;
@@ -50,11 +57,6 @@
 }
 .faux-select li .options .checked {
   background: rgba(255, 255, 255, 0.2);
-}
-.faux-select li .options.open {
-  background: #2F2F3F;
-  border: 3px solid #000;
-  border-top: 3px solid transparent;
 }
 .faux-select:before {
   content: '';
@@ -74,4 +76,10 @@
   border-right: 0.5em solid transparent;
   border-bottom: 0.8em solid #fff;
   border-top: 0;
+}
+.grouped-true .options .group-label {
+  text-indent: 1em;
+}
+.grouped-true .options li {
+  text-indent: 2em;
 }

@@ -10,9 +10,16 @@ $(function() {
             var selectName = $(this).attr('name');
             var selectId = $(this).attr('id');
             if ( $(this).attr('multiple') == 'multiple' ) { var multiple = true; } else { var multiple = false; };
+            if ( $('optgroup', this).length > 0){ var grouped = true; } else {
+            	var grouped = false; };
             var arrOptionValue = new Array();
             var arrOptionText = new Array();
             var optionsFauxList = '';
+            var arrOptionGroup = new Array();
+            var arrOptionGroupValue = [];
+            var arrOptionGroupText = [];
+            var currentCount = 0;
+            var optionsGroupFauxList = '';
             
             for (var i = 1; i < $('option', this).length + 1; i++) {
                 arrOptionValue[i] = $('option:nth-of-type(' + i + ')', this).attr('value');
@@ -22,17 +29,7 @@ $(function() {
                 optionsFauxList += '<li data-value="' + arrOptionValue[i] + '">' + arrOptionText[i] + '</li>';
             };
 
-            var arrOptionGroup = new Array();
-            var arrOptionGroupValue = [];
-            var arrOptionGroupText = [];
-            var currentCount = 0;
-            var optionsGroupFauxList = '';
-
-            
-
-            
-
-            var openFauxList = '<ul class="faux-select multiple-'+multiple+'" id="' + selectId + '" name="' + selectName + '" data-selected-value="' + arrOptionValue[1] + '"><li class="selected-option"><span>' + arrOptionText[1] + '</span><ul class="options">';
+            var openFauxList = '<ul class="faux-select multiple-'+multiple+' grouped-'+grouped+'" id="' + selectId + '" name="' + selectName + '" data-selected-value="' + arrOptionValue[1] + '"><li class="selected-option"><span>' + arrOptionText[1] + '</span><ul class="options">';
             var closeFauxList = '</ul></li></ul>';
 
 
@@ -56,7 +53,7 @@ $(function() {
             	$(openFauxList + optionsFauxList + closeFauxList).insertAfter($(this));
             }
             $(this).addClass('hidden');
-            //$(this).css('display','none');
+            $(this).css('display','none');
         });
         enableFauxSelectbox();
         enableBodyCloser();
@@ -75,7 +72,12 @@ $(function() {
 		$('.faux-select.multiple-true').click(function(){
 		  $(this).addClass('open');
 		  $('.options',this).addClass('open');
-		  $('.options',this).slideToggle( "medium", function() {});
+		  if ( $('.faux-select').hasClass('open') ){
+		  	$('.options',this).slideDown( "medium", function() {});	
+		  } else {
+		  	$('.options',this).slideUp( "medium", function() {});
+		  }
+		  
 		});
 
 		$('.options li').click(function(){
@@ -83,16 +85,19 @@ $(function() {
 			var selection = $(this).text();
 			var dataValue = $(this).attr('data-value');
 			$('.selected-option span',parentSelector).text(selection);
-			$(this).toggleClass('checked');
-			parentSelector.attr('data-selected-value',dataValue);
+			if (parentSelector.hasClass('multiple-true')){
+				$(this).toggleClass('checked');	
+			} else {
+				$('.options li').removeClass('checked');
+				$(this).toggleClass('checked');
+			}
 			
+			parentSelector.attr('data-selected-value',dataValue);
 
 			if (parentSelector.hasClass('multiple-true')){
 				if (multiValue.indexOf(dataValue) >= 0){
-
 					multiValue = multiValue.replace(dataValue+',','');
 					var passOn = 1;
-
 				} else {
 					if (passOn != 1){
 						if (multiValue == ''){
@@ -101,14 +106,9 @@ $(function() {
 							multiValue += ','+dataValue;
 						}
 					}
-
-					
 				}
-
 				var arraySelection = multiValue.split(',');
-				
 				mirrorSelect( parentSelector.attr('id'), selection, arraySelection);
-
 			} else {
 				mirrorSelect( parentSelector.attr('id'), selection, dataValue);
 			}
@@ -121,14 +121,13 @@ $(function() {
 	  console.log( $('select#'+selectionID).val() );
 	}
 
-
 	function enableBodyCloser(){
 		$('.faux-select').each(function(){
 			$(this).mouseleave(function(){
 				if ($(this).hasClass('open')){
 					$(this).toggleClass('open');
 		  			$('.options',this).toggleClass('open');
-		  			$('.options',this).slideToggle( "medium", function() {});
+		  			$('.options',this).slideUp( "medium", function() {});
 				}
 			});
 		});
