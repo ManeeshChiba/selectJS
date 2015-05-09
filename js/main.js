@@ -84,15 +84,6 @@ $(function() {
 			var parentSelector = $(this).parents('.faux-select');
 			var selection = $(this).text();
 			var dataValue = $(this).attr('data-value');
-			$('.selected-option span',parentSelector).text(selection);
-			if (parentSelector.hasClass('multiple-true')){
-				$(this).toggleClass('checked');	
-			} else {
-				$('.options li').removeClass('checked');
-				$(this).toggleClass('checked');
-			}
-			
-			parentSelector.attr('data-selected-value',dataValue);
 
 			if (parentSelector.hasClass('multiple-true')){
 				if (multiValue.indexOf(dataValue) >= 0){
@@ -112,13 +103,39 @@ $(function() {
 			} else {
 				mirrorSelect( parentSelector.attr('id'), selection, dataValue);
 			}
+
+			
+
+			if (parentSelector.hasClass('multiple-true')){
+				var selectorID = parentSelector.attr('id');
+				var selectedValueText = '';
+				$('#'+selectorID+' option:selected').each(function(i, selectedValue){ 
+				  selectedValueText += $(selectedValue).text()+',';
+				  $('.selected-option span',parentSelector).text(selectedValueText);	
+				});
+				
+				
+			} else {
+				$('.selected-option span',parentSelector).text(selection);	
+			}
+
+			if (parentSelector.hasClass('multiple-true')){
+				$(this).toggleClass('checked');	
+			} else {
+				$('.options li').removeClass('checked');
+				$(this).toggleClass('checked');
+			}
+			
+			parentSelector.attr('data-selected-value',dataValue);
+
+			
 		});
 	}
 
 	//Mirror Select Box Values
 	function mirrorSelect(selectionID, selectionText, SelectionValue) {
 	  $('select#'+selectionID).val(SelectionValue).trigger('change');
-	  console.log( $('select#'+selectionID).val() );
+	  //console.log( $('select#'+selectionID).val() );
 	}
 
 	function enableBodyCloser(){
