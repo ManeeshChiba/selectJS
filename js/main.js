@@ -13,6 +13,7 @@ $(function() {
             var arrOptionValue = new Array();
             var arrOptionText = new Array();
             var optionsFauxList = '';
+            
             for (var i = 1; i < $('option', this).length + 1; i++) {
                 arrOptionValue[i] = $('option:nth-of-type(' + i + ')', this).attr('value');
                 arrOptionText[i] = $('option:nth-of-type(' + i + ')', this).text();
@@ -20,13 +21,45 @@ $(function() {
             for (var i = 1; i < arrOptionValue.length; i++) {
                 optionsFauxList += '<li data-value="' + arrOptionValue[i] + '">' + arrOptionText[i] + '</li>';
             };
+
+            var arrOptionGroup = new Array();
+            var arrOptionGroupValue = [];
+            var arrOptionGroupText = [];
+            var currentCount = 0;
+            var optionsGroupFauxList = '';
+
+            
+
+            
+
             var openFauxList = '<ul class="faux-select multiple-'+multiple+'" id="' + selectId + '" name="' + selectName + '" data-selected-value="' + arrOptionValue[1] + '"><li class="selected-option"><span>' + arrOptionText[1] + '</span><ul class="options">';
             var closeFauxList = '</ul></li></ul>';
-            $(openFauxList + optionsFauxList + closeFauxList).insertAfter($(this));
+
+
+            if ( $('optgroup', this).length > 0 ){
+            	$('optgroup', this).each(function(index){
+            		arrOptionGroup[index] = $(this).attr('label');
+            		optionsGroupFauxList += '<li class="group-label">'+arrOptionGroup[index]+'</li>';
+            		currentCount = index;
+            		arrOptionGroupValue[currentCount] = [];
+            		arrOptionGroupText[currentCount] = [];
+            		$('option',this).each(function(index){
+            			arrOptionGroupValue[currentCount].push( $(this).attr('value') );
+            			arrOptionGroupText[currentCount].push( $(this).text() );
+            			optionsGroupFauxList += '<li data-value="' + arrOptionGroupValue[currentCount][index] + '">' + arrOptionGroupText[currentCount][index] + '</li>';
+            			
+            		});
+            	});
+            	$(openFauxList + optionsGroupFauxList + closeFauxList).insertAfter($(this));
+            	
+            } else {
+            	$(openFauxList + optionsFauxList + closeFauxList).insertAfter($(this));
+            }
             $(this).addClass('hidden');
             //$(this).css('display','none');
         });
         enableFauxSelectbox();
+        enableBodyCloser();
     }
 
     var multiValue = '';
@@ -36,11 +69,13 @@ $(function() {
 		$('.faux-select.multiple-false').click(function(){
 		  $(this).toggleClass('open');
 		  $('.options',this).toggleClass('open');
+		  $('.options',this).slideToggle( "medium", function() {});
 		});
 
 		$('.faux-select.multiple-true').click(function(){
 		  $(this).addClass('open');
 		  $('.options',this).addClass('open');
+		  $('.options',this).slideToggle( "medium", function() {});
 		});
 
 		$('.options li').click(function(){
@@ -53,22 +88,25 @@ $(function() {
 			
 
 			if (parentSelector.hasClass('multiple-true')){
-				
-				
-
 				if (multiValue.indexOf(dataValue) >= 0){
+
 					multiValue = multiValue.replace(dataValue+',','');
+					var passOn = 1;
+
 				} else {
-					if (multiValue == ''){
-						multiValue += dataValue;
-					} else {
-						multiValue += ','+dataValue;
+					if (passOn != 1){
+						if (multiValue == ''){
+							multiValue += dataValue;
+						} else {
+							multiValue += ','+dataValue;
+						}
 					}
+
 					
 				}
 
 				var arraySelection = multiValue.split(',');
-				console.log(arraySelection);
+				
 				mirrorSelect( parentSelector.attr('id'), selection, arraySelection);
 
 			} else {
@@ -84,75 +122,16 @@ $(function() {
 	}
 
 
+	function enableBodyCloser(){
+		$('.faux-select').each(function(){
+			$(this).mouseleave(function(){
+				if ($(this).hasClass('open')){
+					$(this).toggleClass('open');
+		  			$('.options',this).toggleClass('open');
+		  			$('.options',this).slideToggle( "medium", function() {});
+				}
+			});
+		});
+	}
+
 });
-
-
-
-
-//
-
-// if ($('select#names[multiple]').length) {
-//   $('.faux-select').click(function() {
-//     if ($(this).hasClass('open')) {
-//       //$(this).removeClass('open');
-//       //$('.options',this).removeClass('open');
-//     } else {
-//       $(this).addClass('open');
-//       $('.options', this).addClass('open');
-//     }
-//   });
-
-//   $('.options li').click(function() {
-//     $(this).toggleClass('check');
-//     var selection = $(this).text();
-//     var dataValue = $(this).attr('data-value');
-//     $('.selected-option span').text(selection);
-//     $('.faux-select').attr('data-selected-value', dataValue);
-//     mirrorSelect(selection, dataValue);
-//     updateSelection();
-//   });
-
-// } else {
-//   $('.faux-select').click(function() {
-//     $(this).toggleClass('open');
-//     $('.options', this).toggleClass('open');
-//   });
-
-//   $('.options li').click(function() {
-//     var selection = $(this).text();
-//     var dataValue = $(this).attr('data-value');
-//     $('.selected-option span').text(selection);
-//     $('.faux-select').attr('data-selected-value', dataValue);
-//     mirrorSelect(selection, dataValue);
-//     updateSelection();
-//   });
-
-// }
-
-// //Mirror Select Box Values
-
-// var currentSelection;
-
-// function updateSelection() {
-//   currentSelection = $('select').val();
-//   outputSelection(currentSelection);
-// }
-
-// function mirrorSelect(selectionText, SelectionValue) {
-//   if ($('select#names[multiple]').length) {
-//     outputSelection('ja');
-//   } else {
-//     outputSelection(currentSelection);
-//   }
-
-//   $('select#names').val(SelectionValue).trigger('change');
-// }
-
-// $('select#names').change(function(val) {
-//   //outputSelection($(this).val());
-// });
-
-// //Output Selection
-// function outputSelection(output) {
-//   $('#not-console-output h5').text(output);
-// }
